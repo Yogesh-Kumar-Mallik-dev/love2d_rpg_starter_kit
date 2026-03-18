@@ -47,21 +47,16 @@ Vector2.NORTH_WEST = lock(Vector2.new(-INV_SQRT2, -INV_SQRT2))
 Vector2.SOUTH_EAST = lock(Vector2.new(INV_SQRT2, INV_SQRT2))
 Vector2.SOUTH_WEST = lock(Vector2.new(-INV_SQRT2, INV_SQRT2))
 
--- ========================
 -- Aliases (Godot style)
--- ========================
-
--- Cardinal
 Vector2.UP    = Vector2.NORTH
 Vector2.DOWN  = Vector2.SOUTH
 Vector2.RIGHT = Vector2.EAST
 Vector2.LEFT  = Vector2.WEST
 
--- Diagonal
-Vector2.UP_RIGHT    = Vector2.NORTH_EAST
-Vector2.UP_LEFT     = Vector2.NORTH_WEST
-Vector2.DOWN_RIGHT  = Vector2.SOUTH_EAST
-Vector2.DOWN_LEFT   = Vector2.SOUTH_WEST
+Vector2.UP_RIGHT   = Vector2.NORTH_EAST
+Vector2.UP_LEFT    = Vector2.NORTH_WEST
+Vector2.DOWN_RIGHT = Vector2.SOUTH_EAST
+Vector2.DOWN_LEFT  = Vector2.SOUTH_WEST
 
 -- ========================
 -- Core Methods
@@ -69,6 +64,10 @@ Vector2.DOWN_LEFT   = Vector2.SOUTH_WEST
 
 function Vector2:copy()
     return Vector2.new(self.x, self.y)
+end
+
+function Vector2:is_zero()
+    return self.x == 0 and self.y == 0
 end
 
 function Vector2:length()
@@ -82,7 +81,7 @@ end
 function Vector2:normalized()
     local len = self:length()
     if len == 0 then
-        return Vector2.new(0, 0)
+        return Vector2.ZERO
     end
     return Vector2.new(self.x / len, self.y / len)
 end
@@ -114,6 +113,14 @@ end
 
 function Vector2:lerp(to, weight)
     return self + (to - self) * weight
+end
+
+function Vector2:clamped(max_len)
+    local len = self:length()
+    if len > max_len then
+        return self:normalized() * max_len
+    end
+    return self
 end
 
 -- ========================
